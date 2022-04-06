@@ -48,8 +48,9 @@ Sub 分离()
         
         d.InlineShapes.AddPicture Filename:=myWS.Cells(i, 7).Hyperlinks(1).Address, LinkToFile:=False, SaveWithDocument:=True '图片###
         
-        d.tables(1).Cell(2, 1) = myWS.Cells(i, 4).Text '姓名###
-        d.tables(1).Cell(2, 2) = myWS.Cells(i, 6).Text '手机号###
+        d.tables(1).Cell(2, 1) = myWS.Cells(i, 1).Text '序号###
+        d.tables(1).Cell(2, 2) = myWS.Cells(i, 4).Text '姓名###
+        d.tables(1).Cell(2, 3) = myWS.Cells(i, 6).Text '手机号###
         d.tables(1).Cell(3, 1) = myWS.Cells(i, 13).Text '诗歌###
         
         d.Close
