@@ -333,3 +333,141 @@ Sub ReadDataFromExcel()
     
 
 End Sub
+
+
+'version 8
+
+
+Sub ReadDataFromExcel()
+    
+    Dim myWS As Object
+    Set myWS = GetObject(, "Excel.Application") '打开存有数据的表格
+    
+    Dim myPPT As Presentation
+    Set myPPT = ActivePresentation
+    
+    Dim pptSlide As Slide
+    Dim myPic As Shape
+    
+    Dim pptLayout As CustomLayout
+    Set pptLayout = myPPT.Slides(1).CustomLayout
+
+     
+    For i = 2 To 4    '遍历数据行
+        
+        Set pptSlide = myPPT.Slides.AddSlide(i, pptLayout)
+        
+        Set d = myPPT.Slides(i - 1)
+        
+             
+        Set myPic = d.Shapes.AddPicture(FileName:=myWS.Sheets(1).Cells(i, 7).Hyperlinks(1).Address, LinkToFile:=msoFalse, SaveWithDocument:=msoTrue, Left:=0, Top:=0)  '图片OK###
+        
+        
+        
+        'myPic.LockAspectRatio = msoFalse
+        'myPic.ScaleWidth 1, msoTrue
+        'myPic.ScaleHeight 1, msoTrue
+        If myPic.Width > 900 Then
+        
+            With myPic
+                .LockAspectRatio = msoFalse
+                .ScaleHeight 900 / myPic.Width, msoTrue
+                .ScaleWidth 900 / myPic.Width, msoTrue
+                .Top = 50
+                .Left = 5
+            End With
+            
+        End If
+
+        
+        d.Select
+        d.Shapes.AddTable(2, 3).Select
+        d.Shapes(1).Table.Cell(2, 1).Merge MergeTo:=d.Shapes(1).Table.Cell(2, 2)
+        d.Shapes(1).Table.Cell(2, 1).Merge MergeTo:=d.Shapes(1).Table.Cell(2, 3)
+        
+        d.Shapes(1).Table.Cell(1, 1).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 1).Text '序号
+        d.Shapes(1).Table.Cell(1, 2).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 4).Text '姓名
+        d.Shapes(1).Table.Cell(1, 3).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 6).Text '手机号
+        d.Shapes(1).Table.Cell(2, 1).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 13).Text '诗歌
+        
+    Next
+    
+
+End Sub
+
+
+'Version 9
+
+Sub ReadDataFromExcel()
+    
+    Dim myWS As Object
+    Set myWS = GetObject(, "Excel.Application") '打开存有数据的表格
+    
+    Dim myPPT As Presentation
+    Set myPPT = ActivePresentation
+    
+    p = myPPT.Path & "\"
+    
+    Dim pptSlide As Slide
+    Dim myPic As Shape
+    
+    Dim pptLayout As CustomLayout
+    Set pptLayout = myPPT.Slides(1).CustomLayout
+    
+    Set fso = CreateObject("Scripting.FileSystemObject")
+
+     
+    For i = 2 To 101    '遍历数据行
+        
+        Set pptSlide = myPPT.Slides.AddSlide(i, pptLayout)
+        
+        Set d = myPPT.Slides(i - 1)
+        
+        picName = myWS.Cells(i, 6)
+        ext = fso.GetExtensionName(picName)
+        picPath = p & myWS.Cells(i, 1) & myWS.Cells(i, 4) & "." & ext
+        
+        If InStr(1, "jpg jpeg png gif", ext) > 0 Then
+             
+            Set myPic = d.Shapes.AddPicture(FileName:=picPath, LinkToFile:=msoFalse, SaveWithDocument:=msoTrue, Left:=0, Top:=0)  '图片OK###
+             
+        
+             If myPic.Width > 900 Then
+        
+                   With myPic
+                        .LockAspectRatio = msoFalse
+                        .ScaleHeight 900 / myPic.Width, msoTrue
+                        .ScaleWidth 900 / myPic.Width, msoTrue
+                        .Top = 50
+                        .Left = 5
+                    End With
+            
+            End If
+
+        
+            d.Select
+            d.Shapes.AddTable(2, 3).Select
+            d.Shapes(1).Table.Cell(2, 1).Merge MergeTo:=d.Shapes(1).Table.Cell(2, 2)
+            d.Shapes(1).Table.Cell(2, 1).Merge MergeTo:=d.Shapes(1).Table.Cell(2, 3)
+        
+            d.Shapes(1).Table.Cell(1, 1).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 1).Text '序号
+            d.Shapes(1).Table.Cell(1, 2).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 4).Text '姓名
+            d.Shapes(1).Table.Cell(1, 3).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 5).Text '手机号
+            d.Shapes(1).Table.Cell(2, 1).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 7).Text '诗歌
+        Else
+            d.Select
+            d.Shapes.AddTable(2, 4).Select
+            d.Shapes(1).Table.Cell(2, 1).Merge MergeTo:=d.Shapes(1).Table.Cell(2, 2)
+            d.Shapes(1).Table.Cell(2, 1).Merge MergeTo:=d.Shapes(1).Table.Cell(2, 3)
+            d.Shapes(1).Table.Cell(2, 1).Merge MergeTo:=d.Shapes(1).Table.Cell(2, 4)
+        
+            d.Shapes(1).Table.Cell(1, 1).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 1).Text '序号
+            d.Shapes(1).Table.Cell(1, 2).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 4).Text '姓名
+            d.Shapes(1).Table.Cell(1, 3).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 5).Text '手机号
+            d.Shapes(1).Table.Cell(1, 4).Shape.TextFrame.TextRange.Text = "视频文件"
+            d.Shapes(1).Table.Cell(2, 1).Shape.TextFrame.TextRange.Text = myWS.Sheets(1).Cells(i, 7).Text '诗歌
+        End If
+        
+    Next
+
+End Sub
